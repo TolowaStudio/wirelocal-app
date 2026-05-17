@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = 'May 17, 2025';
+---
+
+<Base
+  title="Terms of Service — Wire Local"
+  description="The terms governing your use of the Wire Local app and website."
+>
+  <main class="legal-page">
+    <div class="legal-inner">
+      <nav class="legal-breadcrumb">
+        <a href="/">wirelocal.app</a>
+        <span aria-hidden="true">/</span>
+        <span>Terms of Service</span>
+      </nav>
+
+      <header class="legal-header">
+        <p class="eyebrow">LEGAL</p>
+        <h1>Terms of Service</h1>
+        <p class="meta">Last updated: {lastUpdated}</p>
+      </header>
+
+      <div class="legal-body">
+        <p>
+          These Terms of Service ("Terms") govern your use of the Wire Local mobile application and wirelocal.app website operated by Tolowa Pacific LLC ("we", "us", or "our"). By using Wire Local, you agree to these Terms.
+        </p>
+
+        <h2>Use of the service</h2>
+        <p>Wire Local provides real-time civic alerts, community incident reporting, and hyperlocal news aggregation. You may use Wire Local for personal, non-commercial purposes. You may not:</p>
+        <ul>
+          <li>Submit false, misleading, or harmful content</li>
+          <li>Use Wire Local to harass, defame, or threaten any person</li>
+          <li>Reverse-engineer, scrape, or automate access to Wire Local without prior written consent</li>
+          <li>Use Wire Local for any unlawful purpose</li>
+        </ul>
+
+        <h2>User-submitted content</h2>
+        <p>When you submit a photo, tip, or other content through Wire Local, you grant Tolowa Pacific LLC a worldwide, royalty-free, non-exclusive license to display, distribute, and moderate that content on Wire Local and associated city platforms. You represent that you have the right to submit the content and that it does not infringe any third-party rights.</p>
+        <p>Wire Local may remove any content at its discretion without notice.</p>
+
+        <h2>Accuracy of information</h2>
+        <p>Wire Local aggregates information from public scanner feeds, dispatch systems, community submissions, and third-party sources. We make no warranty as to the accuracy, timeliness, or completeness of this information. Wire Local is not a substitute for official emergency services. In an emergency, call 911.</p>
+
+        <h2>Contributor rewards</h2>
+        <p>Points, badges, and giveaway entries earned through Wire Local have no cash value unless explicitly stated in a specific promotion. Sponsor-funded giveaway prizes are subject to the terms of the individual promotion and applicable law.</p>
+
+        <h2>Intellectual property</h2>
+        <p>The Wire Local name, logos, design system, and app code are the property of Tolowa Pacific LLC. You may not use them without prior written permission.</p>
+
+        <h2>Disclaimers and limitation of liability</h2>
+        <p>Wire Local is provided "as is" without warranty of any kind. To the maximum extent permitted by law, Tolowa Pacific LLC will not be liable for any indirect, incidental, special, or consequential damages arising from your use of Wire Local.</p>
+
+        <h2>Governing law</h2>
+        <p>These Terms are governed by the laws of the State of Washington, without regard to conflict of law principles. Any disputes will be resolved in the courts of Spokane County, Washington.</p>
+
+        <h2>Changes to these terms</h2>
+        <p>We may update these Terms at any time. Continued use of Wire Local after changes constitutes acceptance of the updated Terms.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about these Terms? Email <a href="mailto:legal@wirelocal.app">legal@wirelocal.app</a>.</p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .legal-page {
+    padding: 80px var(--sw-s-4) 64px;
+    min-height: 80svh;
+  }
+
+  .legal-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .legal-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-muted);
+    margin-bottom: 40px;
+  }
+
+  .legal-breadcrumb a { color: var(--sw-red); text-underline-offset: 3px; }
+
+  .legal-header {
+    margin-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-3);
+    border-bottom: 1px solid var(--sw-border);
+    padding-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-muted);
+  }
+
+  .legal-header h1 {
+    font-family: var(--sw-font-sans);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: var(--sw-track-snug);
+    color: var(--sw-ink);
+  }
+
+  .meta {
+    font-size: var(--sw-fs-13);
+    color: var(--sw-ink-faint);
+  }
+
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-6);
+    font-size: var(--sw-fs-15);
+    line-height: 1.7;
+    color: var(--sw-ink-muted);
+  }
+
+  .legal-body h2 {
+    font-family: var(--sw-font-sans);
+    font-weight: 700;
+    font-size: var(--sw-fs-18);
+    color: var(--sw-ink);
+    margin-top: 8px;
+  }
+
+  .legal-body ul {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-2);
+  }
+
+  .legal-body a { color: var(--sw-red); text-underline-offset: 3px; }
+  .legal-body a:hover { text-decoration: underline; }
+
+  .legal-body strong { color: var(--sw-ink); font-weight: 600; }
+</style>

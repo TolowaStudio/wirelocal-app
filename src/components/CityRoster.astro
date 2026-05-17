@@ -1,0 +1,214 @@
+---
+const cities = [
+  {
+    name: 'Spokane',
+    state: 'WA',
+    status: 'live' as const,
+    href: 'https://spokanewire.com',
+    tagline: 'The original wire.',
+  },
+  {
+    name: 'Boise',
+    state: 'ID',
+    status: 'soon' as const,
+    href: null,
+    tagline: 'Coming next.',
+  },
+  {
+    name: 'Tacoma',
+    state: 'WA',
+    status: 'soon' as const,
+    href: null,
+    tagline: 'On deck.',
+  },
+  {
+    name: 'Tri-Cities',
+    state: 'WA',
+    status: 'soon' as const,
+    href: null,
+    tagline: 'On deck.',
+  },
+] as const;
+---
+
+<section class="cities">
+  <div class="cities-inner">
+    <p class="section-eyebrow">WHERE WE'RE LIVE</p>
+    <h2 class="section-heading">One app, every city.</h2>
+
+    <div class="city-grid">
+      {cities.map((city) => (
+        <div class:list={['city-card', city.status === 'live' ? 'city-card--live' : 'city-card--soon']}>
+          {city.href ? (
+            <a href={city.href} class="city-link" target="_blank" rel="noopener noreferrer">
+              <div class="city-top">
+                <div>
+                  <p class="city-name">{city.name}</p>
+                  <p class="city-state">{city.state}</p>
+                </div>
+                <span class:list={['status-badge', city.status === 'live' ? 'status-badge--live' : 'status-badge--soon']}>
+                  {city.status === 'live' ? (
+                    <><span class="sw-live-dot" style="width:6px;height:6px;" /> LIVE</>
+                  ) : 'COMING SOON'}
+                </span>
+              </div>
+              <p class="city-tagline">{city.tagline}</p>
+              {city.status === 'live' && (
+                <p class="city-cta">Visit spokanewire.com &rarr;</p>
+              )}
+            </a>
+          ) : (
+            <div class="city-link">
+              <div class="city-top">
+                <div>
+                  <p class="city-name">{city.name}</p>
+                  <p class="city-state">{city.state}</p>
+                </div>
+                <span class="status-badge status-badge--soon">COMING SOON</span>
+              </div>
+              <p class="city-tagline">{city.tagline}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cities {
+    padding: 96px var(--sw-s-4);
+    background: var(--sw-surface-card);
+    border-top: 1px solid var(--sw-border);
+  }
+
+  .cities-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-muted);
+    margin-bottom: var(--sw-s-4);
+  }
+
+  .section-heading {
+    font-family: var(--sw-font-sans);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.05;
+    letter-spacing: var(--sw-track-snug);
+    color: var(--sw-ink);
+    margin-bottom: 56px;
+  }
+
+  .city-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sw-s-4);
+  }
+
+  .city-card {
+    border-radius: var(--sw-radius-lg);
+    border: 1px solid var(--sw-border);
+    overflow: hidden;
+    transition: border-color var(--sw-dur-base) var(--sw-ease-out);
+  }
+
+  .city-card--live { border-color: rgba(239,68,68,0.3); }
+  .city-card--live:hover { border-color: rgba(239,68,68,0.6); }
+
+  .city-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-3);
+    padding: var(--sw-s-6);
+    background: var(--sw-bg);
+    height: 100%;
+    cursor: default;
+  }
+
+  a.city-link { cursor: pointer; }
+  a.city-link:hover .city-name { color: var(--sw-red); }
+
+  .city-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .city-name {
+    font-family: var(--sw-font-sans);
+    font-weight: 800;
+    font-size: var(--sw-fs-24);
+    letter-spacing: var(--sw-track-snug);
+    color: var(--sw-ink);
+    text-transform: lowercase;
+    transition: color var(--sw-dur-fast) var(--sw-ease-out);
+  }
+
+  .city-state {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-faint);
+    margin-top: 3px;
+  }
+
+  .status-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: var(--sw-radius-pill);
+    white-space: nowrap;
+  }
+
+  .status-badge--live {
+    background: rgba(239,68,68,0.15);
+    color: var(--sw-live);
+  }
+
+  .status-badge--soon {
+    background: rgba(148,163,184,0.1);
+    color: var(--sw-ink-faint);
+  }
+
+  .city-tagline {
+    font-size: var(--sw-fs-13);
+    color: var(--sw-ink-muted);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .city-cta {
+    font-size: var(--sw-fs-12);
+    font-weight: 600;
+    color: var(--sw-red);
+    letter-spacing: 0.01em;
+    margin-top: auto;
+  }
+
+  @media (max-width: 900px) {
+    .city-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 520px) {
+    .city-grid { grid-template-columns: 1fr; }
+    .cities { padding: 64px var(--sw-s-4); }
+  }
+</style>

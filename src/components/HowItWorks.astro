@@ -1,0 +1,136 @@
+---
+const steps = [
+  {
+    num: '01',
+    title: 'Pick your city',
+    copy: 'Open Wire Local and select your city. Spokane is live now; Boise, Tacoma, and Tri-Cities are on deck.',
+  },
+  {
+    num: '02',
+    title: 'Follow the wire',
+    copy: 'Get a real-time feed of every incident in your area. Set radius-based push alerts for the types that matter to you.',
+  },
+  {
+    num: '03',
+    title: 'Tip the wire',
+    copy: 'Witness something? Submit a photo and location. AI handles the caption. You earn points, badges, and giveaway entries.',
+  },
+] as const;
+---
+
+<section class="how">
+  <div class="how-inner">
+    <p class="section-eyebrow">HOW IT WORKS</p>
+    <h2 class="section-heading">On the wire in three steps.</h2>
+
+    <div class="steps">
+      {steps.map((s, i) => (
+        <div class="step">
+          <div class="step-num" aria-hidden="true">{s.num}</div>
+          <div class="step-body">
+            <h3 class="step-title">{s.title}</h3>
+            <p class="step-copy">{s.copy}</p>
+          </div>
+          {i < steps.length - 1 && (
+            <div class="connector" aria-hidden="true"></div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .how {
+    padding: 96px var(--sw-s-4);
+  }
+
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-muted);
+    margin-bottom: var(--sw-s-4);
+  }
+
+  .section-heading {
+    font-family: var(--sw-font-sans);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.05;
+    letter-spacing: var(--sw-track-snug);
+    color: var(--sw-ink);
+    margin-bottom: 56px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .step {
+    position: relative;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-4);
+  }
+
+  .step:last-child { padding-right: 0; }
+
+  .step-num {
+    font-family: var(--sw-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: var(--sw-track-wide);
+    color: var(--sw-red);
+    background: rgba(239,68,68,0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .connector {
+    position: absolute;
+    top: 18px;
+    right: -2px;
+    width: calc(100% - 36px - 16px);
+    height: 1px;
+    background: var(--sw-border-strong);
+    transform: translateX(52px);
+  }
+
+  .step-title {
+    font-family: var(--sw-font-sans);
+    font-weight: 700;
+    font-size: var(--sw-fs-18);
+    line-height: 1.2;
+    color: var(--sw-ink);
+  }
+
+  .step-copy {
+    font-size: var(--sw-fs-14);
+    line-height: 1.6;
+    color: var(--sw-ink-muted);
+    max-width: 280px;
+  }
+
+  @media (max-width: 700px) {
+    .steps { grid-template-columns: 1fr; gap: 40px; }
+    .step { padding-right: 0; }
+    .connector { display: none; }
+    .how { padding: 64px var(--sw-s-4); }
+  }
+</style>

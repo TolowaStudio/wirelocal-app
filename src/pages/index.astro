@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import StatStrip from '../components/StatStrip.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import CityRoster from '../components/CityRoster.astro';
+import BuiltBy from '../components/BuiltBy.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base>
+  <main>
+    <Hero />
+    <StatStrip />
+    <FeatureGrid id="features" />
+    <HowItWorks />
+    <CityRoster id="cities" />
+    <BuiltBy />
+  </main>
+  <Footer />
+</Base>

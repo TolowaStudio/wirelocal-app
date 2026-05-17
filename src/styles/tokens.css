@@ -1,0 +1,286 @@
+/* =====================================================================
+   Wire Design System — colors & type tokens
+   Mobile-first hyperlocal news + civic alert system (Wire / SpokaneWire)
+   Production tokens lifted from spokanewire/apps/web/src/app/globals.css
+   and brand/README.md, then extended for native mobile.
+   ===================================================================== */
+
+/* ---------- Fonts ----------
+   Inter and JetBrains Mono are loaded from Google Fonts. If you ship a
+   native app, bundle the .ttf files from fonts/ instead and remove this. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* =================================================================
+     COLORS — base palette (do not theme; these are the brand)
+     ================================================================= */
+
+  /* Brand red — the block */
+  --sw-red:               #ef4444;
+  --sw-red-hover:         #dc2626;
+  --sw-red-deep:          #b91c1c;   /* pressed / active */
+  --sw-red-soft:          rgb(239 68 68 / 0.18);
+
+  /* Ink (text) — light on dark */
+  --sw-ink:               #f1f5f9;   /* primary text */
+  --sw-ink-muted:         #94a3b8;   /* secondary text, meta */
+  --sw-ink-faint:         #64748b;   /* placeholder, tertiary */
+  --sw-ink-disabled:      #475569;
+
+  /* Ink for light surfaces (rarely used in the app) */
+  --sw-ink-dark:          #15171c;   /* wordmark on paper */
+  --sw-paper:             #f0eee9;   /* light surface — print, share cards */
+
+  /* Surfaces — dark first */
+  --sw-bg:                #0b0d12;   /* canvas / scaffold */
+  --sw-surface:           #0b0d12;
+  --sw-surface-card:      #14171f;   /* default card */
+  --sw-surface-elevated:  #1a1d27;   /* modal, sheet, input */
+  --sw-surface-sunken:    #07090d;   /* scrollbar track, well */
+  --sw-overlay:           rgba(7, 9, 13, 0.72);   /* sheet scrim */
+  --sw-glass:             rgba(11, 13, 18, 0.85); /* blurred chrome */
+
+  /* Borders & dividers */
+  --sw-border:            #1f2330;
+  --sw-border-strong:     #2a2f40;
+  --sw-border-faint:      rgba(255, 255, 255, 0.06);
+
+  /* Severity / signal — used by incident badges, map pins, alerts.
+     Numbers borrowed from iOS HIG system colors so they read as native. */
+  --sw-sev-critical:      #ff3b30;   /* fire, life-safety */
+  --sw-sev-high:          #ffcc00;   /* high-severity caution */
+  --sw-sev-medium:        #ff9500;   /* medium-severity */
+  --sw-sev-routine:       #5ac8fa;   /* routine / informational */
+  --sw-sev-resolved:      #8e8e93;   /* resolved / cleared */
+  --sw-sev-ok:            #34c759;   /* all clear / success */
+
+  /* Incident type palette — by category */
+  --sw-type-fire:         #ff6b35;
+  --sw-type-crime:        #ef4444;
+  --sw-type-traffic:      #fbbf24;
+  --sw-type-weather:      #5ac8fa;
+  --sw-type-community:    #a78bfa;
+
+  /* Live / ticker */
+  --sw-live:              #ef4444;
+  --sw-ticker:            #facc15;
+
+  /* Reward / contributor accents (Gen-Z moments only — never on alerts) */
+  --sw-reward-gold:       #facc15;
+  --sw-reward-mint:       #34d399;
+  --sw-reward-violet:     #a78bfa;
+  --sw-reward-pink:       #f472b6;
+
+  /* =================================================================
+     ELEVATION & SHADOW
+     ================================================================= */
+  --sw-shadow-sm:   0 1px 2px rgba(0,0,0,0.4);
+  --sw-shadow-md:   0 4px 12px rgba(0,0,0,0.40), 0 0 0 1px rgba(255,255,255,0.03);
+  --sw-shadow-lg:   0 24px 64px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.04);
+  --sw-shadow-sheet:0 -8px 32px rgba(0,0,0,0.50);
+  --sw-glow-red:    0 0 0 4px rgba(239, 68, 68, 0.18);
+
+  /* =================================================================
+     RADII
+     ================================================================= */
+  --sw-radius-xs:   4px;   /* chips, mono badges */
+  --sw-radius-sm:   8px;   /* inputs, list rows */
+  --sw-radius-md:   12px;  /* cards (default) */
+  --sw-radius-lg:   16px;  /* sheets, modals */
+  --sw-radius-xl:   20px;  /* large cards, photo previews */
+  --sw-radius-pill: 9999px;
+
+  /* =================================================================
+     SPACING — 4px base. Native mobile favors 4/8/12/16/20/24/32.
+     ================================================================= */
+  --sw-s-1:  4px;
+  --sw-s-2:  8px;
+  --sw-s-3:  12px;
+  --sw-s-4:  16px;   /* default screen padding */
+  --sw-s-5:  20px;
+  --sw-s-6:  24px;
+  --sw-s-8:  32px;
+  --sw-s-10: 40px;
+  --sw-s-12: 48px;
+  --sw-s-16: 64px;
+
+  /* Density (production-locked in the web app) */
+  --sw-density-pad: 10px;
+  --sw-density-row: 8px;
+  --sw-density-gap: 10px;
+
+  /* Touch targets */
+  --sw-touch-min:    44px;   /* iOS minimum */
+  --sw-touch-bottom: 56px;   /* tab bar item */
+
+  /* =================================================================
+     TYPE — base
+     ================================================================= */
+  --sw-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sw-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Scale (mobile-first). Names mirror Inter usage in the codebase. */
+  --sw-fs-11:  11px;
+  --sw-fs-12:  12px;
+  --sw-fs-13:  13px;
+  --sw-fs-14:  14px;
+  --sw-fs-15:  15px;
+  --sw-fs-16:  16px;
+  --sw-fs-18:  18px;
+  --sw-fs-20:  20px;
+  --sw-fs-24:  24px;
+  --sw-fs-28:  28px;
+  --sw-fs-32:  32px;
+  --sw-fs-40:  40px;
+  --sw-fs-52:  52px;
+
+  /* Tracking */
+  --sw-track-tight:   -0.03em;  /* display */
+  --sw-track-snug:    -0.02em;  /* headlines */
+  --sw-track-normal:  -0.01em;
+  --sw-track-wide:     0.08em;  /* mono */
+  --sw-track-eyebrow:  0.14em;  /* eyebrow caps */
+  --sw-track-extra:    0.17em;  /* TYPE LABEL caps */
+
+  /* Motion */
+  --sw-ease-out:   cubic-bezier(.2, .8, .2, 1);
+  --sw-ease-emph:  cubic-bezier(.4, 0, .2, 1);
+  --sw-dur-fast:   120ms;
+  --sw-dur-base:   200ms;
+  --sw-dur-slow:   320ms;
+}
+
+/* =====================================================================
+   SEMANTIC TYPE — drop-in classes for screens & components.
+   These are the names you should reach for in product code.
+   ===================================================================== */
+
+/* DISPLAY — used for big marketing moments, onboarding heroes only. */
+.sw-display {
+  font-family: var(--sw-font-sans);
+  font-weight: 800;
+  font-size: clamp(32px, 8vw, 52px);
+  line-height: 1.02;
+  letter-spacing: var(--sw-track-tight);
+  color: var(--sw-ink);
+}
+
+/* H1 — screen-level headline (e.g. "Live in Spokane") */
+.sw-h1 {
+  font-family: var(--sw-font-sans);
+  font-weight: 800;
+  font-size: var(--sw-fs-28);
+  line-height: 1.1;
+  letter-spacing: var(--sw-track-snug);
+  color: var(--sw-ink);
+}
+
+/* H2 — section header inside a screen */
+.sw-h2 {
+  font-family: var(--sw-font-sans);
+  font-weight: 700;
+  font-size: var(--sw-fs-20);
+  line-height: 1.15;
+  letter-spacing: var(--sw-track-normal);
+  color: var(--sw-ink);
+}
+
+/* H3 — card title (e.g. incident card title) */
+.sw-h3 {
+  font-family: var(--sw-font-sans);
+  font-weight: 600;
+  font-size: var(--sw-fs-16);
+  line-height: 1.25;
+  letter-spacing: var(--sw-track-normal);
+  color: var(--sw-ink);
+}
+
+/* BODY */
+.sw-body {
+  font-family: var(--sw-font-sans);
+  font-weight: 400;
+  font-size: var(--sw-fs-15);
+  line-height: 1.5;
+  color: var(--sw-ink);
+}
+.sw-body-sm {
+  font-family: var(--sw-font-sans);
+  font-weight: 400;
+  font-size: var(--sw-fs-13);
+  line-height: 1.45;
+  color: var(--sw-ink-muted);
+}
+
+/* META — timestamps, addresses, secondary lines */
+.sw-meta {
+  font-family: var(--sw-font-sans);
+  font-weight: 500;
+  font-size: var(--sw-fs-12);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--sw-ink-muted);
+}
+
+/* EYEBROW — section labels above titles */
+.sw-eyebrow {
+  font-family: var(--sw-font-sans);
+  font-weight: 600;
+  font-size: var(--sw-fs-11);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--sw-track-eyebrow);
+  color: var(--sw-ink-muted);
+}
+
+/* MONO — channel labels, source tags, scanner timestamps, "LIVE WIRE" */
+.sw-mono {
+  font-family: var(--sw-font-mono);
+  font-weight: 500;
+  font-size: var(--sw-fs-11);
+  letter-spacing: var(--sw-track-wide);
+  text-transform: uppercase;
+  color: var(--sw-ink);
+}
+
+/* TYPE LABEL — wide-tracked uppercase labels used on incident cards
+   (e.g. "TRAFFIC · SCANNER · 4m"). Sans, not mono. */
+.sw-label {
+  font-family: var(--sw-font-sans);
+  font-weight: 600;
+  font-size: var(--sw-fs-11);
+  text-transform: uppercase;
+  letter-spacing: var(--sw-track-extra);
+  color: var(--sw-ink-muted);
+}
+
+/* CTA — button face */
+.sw-cta {
+  font-family: var(--sw-font-sans);
+  font-weight: 600;
+  font-size: var(--sw-fs-15);
+  letter-spacing: 0;
+}
+
+/* TICKER — the marquee that runs across "LIVE WIRE" */
+.sw-ticker-item {
+  font-family: var(--sw-font-sans);
+  font-weight: 500;
+  font-size: var(--sw-fs-14);
+  color: var(--sw-ink);
+}
+
+/* WORDMARK — the typeset "spokane / wire" lockup.
+   spokane = 800, wire = 300, both lowercase. Never all-caps. */
+.sw-wordmark {
+  font-family: var(--sw-font-sans);
+  font-size: var(--sw-fs-20);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  color: var(--sw-ink);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  text-transform: lowercase;
+}
+.sw-wordmark > b { font-weight: 800; font-style: normal; }
+.sw-wordmark > i { font-weight: 300; font-style: normal; color: var(--sw-ink-muted); }

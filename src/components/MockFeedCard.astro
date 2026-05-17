@@ -1,0 +1,196 @@
+---
+export interface Props {
+  type: 'fire' | 'crime' | 'traffic' | 'weather' | 'community';
+  severity: 'critical' | 'high' | 'medium' | 'routine';
+  title: string;
+  address: string;
+  source: string;
+  time: string;
+  status?: 'active' | 'resolved';
+  isLive?: boolean;
+}
+
+const {
+  type,
+  severity,
+  title,
+  address,
+  source,
+  time,
+  status = 'active',
+  isLive = false,
+} = Astro.props;
+
+const typeLabel: Record<string, string> = {
+  fire: 'FIRE',
+  crime: 'CRIME',
+  traffic: 'TRAFFIC',
+  weather: 'WEATHER',
+  community: 'COMMUNITY',
+};
+
+const severityLabel: Record<string, string> = {
+  critical: 'CRITICAL',
+  high: 'HIGH',
+  medium: 'MEDIUM',
+  routine: 'ROUTINE',
+};
+---
+
+<article class:list={['card', `type-${type}`, `sev-${severity}`]}>
+  <div class="card-header">
+    <div class="badge-row">
+      <span class:list={['type-badge', `type-badge--${type}`]}>{typeLabel[type]}</span>
+      <span class:list={['sev-badge', `sev-badge--${severity}`]}>{severityLabel[severity]}</span>
+      {isLive && (
+        <span class="live-pill">
+          <span class="sw-live-dot" />
+          LIVE
+        </span>
+      )}
+    </div>
+    <span class="mono-time">{time}</span>
+  </div>
+
+  <h3 class="card-title">{title}</h3>
+  <p class="card-address">{address}</p>
+
+  <div class="card-footer">
+    <span class="source-badge">{source}</span>
+    {status === 'resolved' && <span class="resolved-badge">RESOLVED</span>}
+  </div>
+</article>
+
+<style>
+  .card {
+    background: var(--sw-surface-card);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius-md);
+    padding: var(--sw-s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-2);
+    width: 100%;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sw-s-2);
+  }
+
+  .badge-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sw-s-2);
+    flex-wrap: wrap;
+  }
+
+  /* Type badge */
+  .type-badge {
+    font-family: var(--sw-font-sans);
+    font-size: var(--sw-fs-11);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--sw-track-extra);
+    padding: 2px 8px;
+    border-radius: var(--sw-radius-xs);
+  }
+
+  .type-badge--fire    { background: rgba(255,107,53,.18); color: var(--sw-type-fire); }
+  .type-badge--crime   { background: rgba(239,68,68,.18);  color: var(--sw-type-crime); }
+  .type-badge--traffic { background: rgba(251,191,36,.18); color: var(--sw-type-traffic); }
+  .type-badge--weather { background: rgba(90,200,250,.18); color: var(--sw-type-weather); }
+  .type-badge--community { background: rgba(167,139,250,.18); color: var(--sw-type-community); }
+
+  /* Severity badge */
+  .sev-badge {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--sw-track-wide);
+    padding: 2px 6px;
+    border-radius: var(--sw-radius-xs);
+  }
+
+  .sev-badge--critical { background: rgba(255,59,48,.15);  color: var(--sw-sev-critical); }
+  .sev-badge--high     { background: rgba(255,204,0,.15);  color: var(--sw-sev-high); }
+  .sev-badge--medium   { background: rgba(255,149,0,.15);  color: var(--sw-sev-medium); }
+  .sev-badge--routine  { background: rgba(90,200,250,.12); color: var(--sw-sev-routine); }
+
+  /* Live pill */
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(239,68,68,.15);
+    color: var(--sw-live);
+    font-family: var(--sw-font-sans);
+    font-size: var(--sw-fs-11);
+    font-weight: 600;
+    letter-spacing: var(--sw-track-eyebrow);
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: var(--sw-radius-pill);
+  }
+
+  .mono-time {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    color: var(--sw-ink-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: var(--sw-font-sans);
+    font-size: var(--sw-fs-15);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: var(--sw-track-normal);
+    color: var(--sw-ink);
+  }
+
+  .card-address {
+    font-family: var(--sw-font-sans);
+    font-size: var(--sw-fs-12);
+    font-weight: 500;
+    color: var(--sw-ink-muted);
+    letter-spacing: 0.01em;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--sw-s-2);
+    margin-top: 2px;
+  }
+
+  .source-badge {
+    background: rgba(148,163,184,.14);
+    color: var(--sw-ink-muted);
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--sw-radius-xs);
+  }
+
+  .resolved-badge {
+    background: rgba(142,142,147,.15);
+    color: var(--sw-sev-resolved);
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--sw-radius-xs);
+  }
+</style>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 84" role="img" aria-label="SpokaneWire mark">
+  <defs>
+    <mask id="m">
+      <rect width="140" height="84" fill="#fff"></rect>
+      <text x="6" y="68" font-family="Inter, system-ui, sans-serif" font-size="80" font-weight="900" fill="#000" letter-spacing="-6">S</text>
+      <text x="58" y="68" font-family="Inter, system-ui, sans-serif" font-size="80" font-weight="900" fill="#000" letter-spacing="-6">W</text>
+    </mask>
+  </defs>
+  <rect width="140" height="84" rx="4" fill="#ef4444" mask="url(#m)"></rect>
+</svg>
