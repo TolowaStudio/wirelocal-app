@@ -1,17 +1,21 @@
 ---
+import { cities, statusLabel } from '../data/cities';
+
+const stats = [
+  ...cities.map((city) => `${city.name} · ${statusLabel[city.status]}`),
+  'Community-powered',
+  '24 / 7',
+];
 ---
 
 <div class="stat-strip">
   <div class="stat-strip-inner">
-    <span class="stat">SPOKANE · LIVE</span>
-    <span class="sep" aria-hidden="true">·</span>
-    <span class="stat">BOISE · COMING SOON</span>
-    <span class="sep" aria-hidden="true">·</span>
-    <span class="stat">TACOMA · COMING SOON</span>
-    <span class="sep" aria-hidden="true">·</span>
-    <span class="stat">COMMUNITY-POWERED</span>
-    <span class="sep" aria-hidden="true">·</span>
-    <span class="stat">24 / 7</span>
+    {stats.map((stat, i) => (
+      <>
+        {i > 0 && <span class="sep" aria-hidden="true">·</span>}
+        <span class="stat">{stat}</span>
+      </>
+    ))}
   </div>
 </div>
 
@@ -51,5 +55,7 @@
   @media (max-width: 640px) {
     .sep { display: none; }
     .stat-strip-inner { gap: 8px; }
+    /* A long city name wraps instead of being clipped by overflow: hidden. */
+    .stat { white-space: normal; }
   }
 </style>
