@@ -1,34 +1,5 @@
 ---
-const cities = [
-  {
-    name: 'Spokane',
-    state: 'WA',
-    status: 'live' as const,
-    href: 'https://spokanewire.com',
-    tagline: 'The original wire.',
-  },
-  {
-    name: 'Boise',
-    state: 'ID',
-    status: 'soon' as const,
-    href: null,
-    tagline: 'Coming next.',
-  },
-  {
-    name: 'Tacoma',
-    state: 'WA',
-    status: 'soon' as const,
-    href: null,
-    tagline: 'On deck.',
-  },
-  {
-    name: 'Tri-Cities',
-    state: 'WA',
-    status: 'soon' as const,
-    href: null,
-    tagline: 'On deck.',
-  },
-] as const;
+import { cities, siteHost, statusLabel } from '../data/cities';
 ---
 
 <section class="cities">
@@ -37,40 +8,30 @@ const cities = [
     <h2 class="section-heading">One app, every city.</h2>
 
     <div class="city-grid">
-      {cities.map((city) => (
-        <div class:list={['city-card', city.status === 'live' ? 'city-card--live' : 'city-card--soon']}>
-          {city.href ? (
-            <a href={city.href} class="city-link" target="_blank" rel="noopener noreferrer">
+      {cities.map((city) => {
+        const Card = city.href ? 'a' : 'div';
+        const linkAttrs = city.href ? { href: city.href, target: '_blank', rel: 'noopener noreferrer' } : {};
+        return (
+          <div class:list={['city-card', `city-card--${city.status}`]}>
+            <Card class="city-link" {...linkAttrs}>
               <div class="city-top">
                 <div>
                   <p class="city-name">{city.name}</p>
                   <p class="city-state">{city.state}</p>
                 </div>
-                <span class:list={['status-badge', city.status === 'live' ? 'status-badge--live' : 'status-badge--soon']}>
-                  {city.status === 'live' ? (
-                    <><span class="sw-live-dot" style="width:6px;height:6px;" /> LIVE</>
-                  ) : 'COMING SOON'}
+                <span class:list={['status-badge', `status-badge--${city.status}`]}>
+                  {city.status === 'live' && <span class="sw-live-dot" style="width:6px;height:6px;" />}
+                  {statusLabel[city.status]}
                 </span>
               </div>
               <p class="city-tagline">{city.tagline}</p>
               {city.status === 'live' && (
-                <p class="city-cta">Visit spokanewire.com &rarr;</p>
+                <p class="city-cta">Visit {siteHost(city.href)} &rarr;</p>
               )}
-            </a>
-          ) : (
-            <div class="city-link">
-              <div class="city-top">
-                <div>
-                  <p class="city-name">{city.name}</p>
-                  <p class="city-state">{city.state}</p>
-                </div>
-                <span class="status-badge status-badge--soon">COMING SOON</span>
-              </div>
-              <p class="city-tagline">{city.tagline}</p>
-            </div>
-          )}
-        </div>
-      ))}
+            </Card>
+          </div>
+        );
+      })}
     </div>
   </div>
 </section>
@@ -107,9 +68,12 @@ const cities = [
     margin-bottom: 56px;
   }
 
+  /* As many columns as fit at --city-card-min each (four on desktop), one
+     column on phones, whatever the number of cities. */
   .city-grid {
+    --city-card-min: 260px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--city-card-min)), 1fr));
     gap: var(--sw-s-4);
   }
 
@@ -136,12 +100,17 @@ const cities = [
   a.city-link { cursor: pointer; }
   a.city-link:hover .city-name { color: var(--sw-red); }
 
+  /* Wraps so a long city name pushes the badge onto its own line instead of
+     out of the card. */
   .city-top {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
   }
+
+  .city-top > div { min-width: 0; }
 
   .city-name {
     font-family: var(--sw-font-sans);
@@ -150,6 +119,7 @@ const cities = [
     letter-spacing: var(--sw-track-snug);
     color: var(--sw-ink);
     text-transform: lowercase;
+    overflow-wrap: anywhere;
     transition: color var(--sw-dur-fast) var(--sw-ease-out);
   }
 
@@ -203,12 +173,7 @@ const cities = [
     margin-top: auto;
   }
 
-  @media (max-width: 900px) {
-    .city-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
   @media (max-width: 520px) {
-    .city-grid { grid-template-columns: 1fr; }
     .cities { padding: 64px var(--sw-s-4); }
   }
 </style>
