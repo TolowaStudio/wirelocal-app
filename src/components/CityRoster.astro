@@ -29,9 +29,10 @@ const cities = [
     tagline: 'On deck.',
   },
 ] as const;
+const { id } = Astro.props as { id?: string };
 ---
 
-<section class="cities">
+<section id={id} class="cities">
   <div class="cities-inner">
     <p class="section-eyebrow">WHERE WE'RE LIVE</p>
     <h2 class="section-heading">One app, every city.</h2>
