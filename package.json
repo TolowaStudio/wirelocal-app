@@ -5,9 +5,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test": "astro build && node scripts/check-dist.mjs",
+    "icons": "node scripts/make-icons.mjs"
   },
   "dependencies": {
+    "@astrojs/sitemap": "3.6.0",
     "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
   }
 }
