@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # Keep in step with the Dockerfile's build image.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Build the site image
+        run: docker build -t wl:ci .
+
+      - name: Run the container
+        run: docker run -d --name wl -p 8080:8080 wl:ci
+
+      - name: Check the nginx config
+        run: docker exec wl nginx -t
+
+      - name: Smoke-test the routes
+        run: |
+          curl -sS -o /dev/null --retry 10 --retry-delay 1 --retry-all-errors http://localhost:8080/
+          fail=0
+          check() {
+            got=$(curl -sS -o /dev/null -w '%{http_code}' "http://localhost:8080$1") || got="no response"
+            echo "$1 -> $got (expected $2)"
+            if [ "$got" != "$2" ]; then fail=1; fi
+          }
+          check / 200
+          check /privacy/ 200
+          check /nope 404
+          exit "$fail"
+
+      - name: Container logs
+        if: failure()
+        run: docker logs wl
