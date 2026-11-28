@@ -1,0 +1,193 @@
+---
+import { speakSamples } from '../data/speak-samples';
+
+const audiences = [
+  {
+    title: 'Teens 13+',
+    copy: 'See what is happening this weekend, from local events to game results and the weather before you head out.',
+  },
+  {
+    title: 'Families',
+    copy: 'Plan the day together with weather, road updates and things to do nearby. Wire Local is for ages 13 and up.',
+  },
+  {
+    title: 'Adults',
+    copy: 'Keep up with local and current events in your city without digging through a dozen feeds.',
+  },
+] as const;
+---
+
+<section class="all-ages" id="everyone" aria-labelledby="all-ages-heading">
+  <div class="inner">
+    <p class="eyebrow">WHO IT'S FOR</p>
+    <h2 id="all-ages-heading">For everyone 13 and up.</h2>
+
+    <ul class="audiences">
+      {audiences.map((a) => (
+        <li class="card">
+          <h3>{a.title}</h3>
+          <p class="muted">{a.copy}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="speak card" data-speak>
+      <div class="speak-head">
+        <div>
+          <h3>Say it your way</h3>
+          <p class="muted">Brainrot is an optional tone. Standard is shown until you switch. These are sample headlines, not live news.</p>
+        </div>
+        {/* hidden until the script runs, so there is never a dead button without JS */}
+        <button type="button" class="toggle" aria-pressed="false" aria-controls="speak-samples" data-speak-toggle hidden>
+          <span class="switch" aria-hidden="true"></span>
+          Speak mode: Brainrot
+        </button>
+      </div>
+
+      <ul class="samples" id="speak-samples" aria-live="polite">
+        {speakSamples.map((s) => (
+          <li>
+            <span class="topic">{s.topic}</span>
+            <span data-tone="standard">{s.standard}</span>
+            <span data-tone="brainrot" hidden>{s.brainrot}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-speak]').forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>('[data-speak-toggle]');
+    if (!button) return;
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      const on = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(on));
+      root.querySelectorAll<HTMLElement>('[data-tone]').forEach((line) => {
+        line.hidden = (line.dataset.tone === 'brainrot') !== on;
+      });
+    });
+  });
+</script>
+
+<style>
+  .all-ages { padding: 96px var(--sw-s-4); border-top: 1px solid var(--sw-border); }
+  .inner { max-width: 1100px; margin: 0 auto; }
+
+  .eyebrow {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    font-weight: 500;
+    letter-spacing: var(--sw-track-wide);
+    color: var(--sw-ink-muted);
+    margin-bottom: var(--sw-s-4);
+  }
+
+  h2 {
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.05;
+    letter-spacing: var(--sw-track-snug);
+    margin-bottom: 56px;
+  }
+
+  h3 { font-size: var(--sw-fs-18); line-height: 1.2; margin-bottom: var(--sw-s-2); }
+  ul { list-style: none; }
+
+  .audiences {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sw-s-4);
+    margin-bottom: var(--sw-s-4);
+  }
+
+  .card {
+    background: var(--sw-surface-card);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius-lg);
+    padding: var(--sw-s-6);
+  }
+
+  .muted { font-size: var(--sw-fs-14); line-height: 1.55; color: var(--sw-ink-muted); }
+
+  .speak-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sw-s-4);
+    margin-bottom: var(--sw-s-4);
+  }
+
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sw-s-3);
+    min-height: var(--sw-touch-min);
+    padding: var(--sw-s-2) var(--sw-s-4);
+    font: 600 var(--sw-fs-14) var(--sw-font-sans);
+    color: var(--sw-ink);
+    background: var(--sw-surface-elevated);
+    border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius-pill);
+    cursor: pointer;
+  }
+
+  /* display above would otherwise override the hidden attribute */
+  .toggle[hidden] { display: none; }
+  .toggle:focus-visible { outline: 2px solid var(--sw-ink); outline-offset: 2px; }
+  .toggle[aria-pressed='true'] { border-color: var(--sw-red); }
+
+  .switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 34px;
+    height: 20px;
+    border-radius: var(--sw-radius-pill);
+    background: var(--sw-ink-disabled);
+  }
+
+  .switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--sw-ink);
+  }
+
+  .toggle[aria-pressed='true'] .switch { background: var(--sw-red); }
+  .toggle[aria-pressed='true'] .switch::after { transform: translateX(14px); }
+
+  .samples li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-s-1);
+    padding: var(--sw-s-3) 0;
+    border-top: 1px solid var(--sw-border);
+    overflow-wrap: anywhere;
+  }
+
+  .topic {
+    font-family: var(--sw-font-mono);
+    font-size: var(--sw-fs-11);
+    letter-spacing: var(--sw-track-wide);
+    text-transform: uppercase;
+    color: var(--sw-ink-muted);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .toggle, .switch, .switch::after {
+      transition: all var(--sw-dur-base) var(--sw-ease-out);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .all-ages { padding: 64px var(--sw-s-4); }
+    .audiences { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
