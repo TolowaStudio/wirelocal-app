@@ -1,35 +1,134 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloud Run
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-wirelocal-app-production
+  cancel-in-progress: false
+
+env:
+  GCP_PROJECT: tolowa-studio
+  GCP_REGION: us-west1
+  AR_REPO: wirelocal-app
+  SERVICE_NAME: wirelocal-app
+  RUNTIME_SA: wirelocal-runtime@tolowa-studio.iam.gserviceaccount.com
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      deployments: write
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          node-version: 20
-          cache: npm
+          persist-credentials: false
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: e2b6ede12b96c7be2fe252c4b1e74bcf
-          command: pages deploy dist --project-name=wirelocal-app --branch=${{ github.ref_name }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${{ env.GCP_REGION }}-docker.pkg.dev" --quiet
+
+      - name: Build and push image
+        run: |
+          set -euo pipefail
+          IMAGE="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${AR_REPO}/${SERVICE_NAME}:${GITHUB_SHA}"
+          docker build -t "${IMAGE}" .
+          docker push "${IMAGE}"
+          echo "IMAGE=${IMAGE}" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: Deploy tagged revision with no traffic
+        run: |
+          set -euo pipefail
+          TAG="sha-${SHORT_SHA}"
+          gcloud run deploy "${SERVICE_NAME}" \
+            --region "${GCP_REGION}" \
+            --project "${GCP_PROJECT}" \
+            --image "${IMAGE}" \
+            --service-account "${RUNTIME_SA}" \
+            --port 8080 \
+            --min-instances 0 \
+            --max-instances 2 \
+            --memory 256Mi \
+            --cpu 1 \
+            --allow-unauthenticated \
+            --no-traffic \
+            --tag "${TAG}" \
+            --quiet
+          echo "REVISION_TAG=${TAG}" >> "$GITHUB_ENV"
+
+      - name: Smoke-check tagged revision
+        run: |
+          set -euo pipefail
+          TAG_URL=""
+          for attempt in 1 2 3 4 5; do
+            TAG_URL="$(gcloud run services describe "${SERVICE_NAME}" \
+              --region "${GCP_REGION}" \
+              --project "${GCP_PROJECT}" \
+              --format=json \
+              | TAG="${REVISION_TAG}" python3 -c '
+          import json, os, sys
+          data = json.load(sys.stdin)
+          tag = os.environ["TAG"]
+          for entry in data.get("status", {}).get("traffic") or []:
+              if entry.get("tag") == tag and entry.get("url"):
+                  print(entry["url"])
+                  break
+          ')"
+            if [ -n "${TAG_URL}" ]; then
+              break
+            fi
+            echo "Waiting for tagged revision URL for ${REVISION_TAG} (${attempt}/5)..."
+            sleep 3
+          done
+          if [ -z "${TAG_URL}" ]; then
+            echo "Failed to resolve tagged revision URL for ${REVISION_TAG}" >&2
+            exit 1
+          fi
+          echo "Tagged revision URL: ${TAG_URL}"
+          for path in / /privacy; do
+            ok=0
+            for attempt in 1 2 3 4 5; do
+              code="$(curl -sS -o /dev/null -w '%{http_code}' "${TAG_URL%/}${path}" || true)"
+              echo "${TAG_URL%/}${path} attempt ${attempt}/5 -> HTTP ${code}"
+              if [ "${code}" = "200" ]; then
+                ok=1
+                break
+              fi
+              if [ "${attempt}" -lt 5 ]; then
+                sleep 3
+              fi
+            done
+            if [ "${ok}" -ne 1 ]; then
+              echo "Smoke check failed for ${TAG_URL%/}${path}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Promote tagged revision to 100% traffic
+        run: |
+          set -euo pipefail
+          gcloud run services update-traffic "${SERVICE_NAME}" \
+            --region "${GCP_REGION}" \
+            --project "${GCP_PROJECT}" \
+            --to-latest \
+            --quiet
+          REV="$(gcloud run services describe "${SERVICE_NAME}" \
+            --region "${GCP_REGION}" \
+            --project "${GCP_PROJECT}" \
+            --format='value(status.latestReadyRevisionName)')"
+          echo "Active revision serving 100%: ${REV}"
