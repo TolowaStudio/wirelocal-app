@@ -38,6 +38,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- Fonts -->
@@ -48,8 +49,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       rel="stylesheet"
     />
 
-    <!-- Cloudflare Web Analytics -->
-    <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "REPLACE_ME"}'></script> -->
   </head>
   <body>
     <slot />
