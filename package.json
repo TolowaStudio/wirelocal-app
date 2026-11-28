@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "astro build && node --test test/*.test.mjs"
+    "test": "astro build && node --test test/*.test.mjs",
+    "test:browser": "node --test test/all-ages-browser.test.mjs"
   },
   "dependencies": {
     "astro": "^4.16.0"
